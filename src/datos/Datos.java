@@ -8,7 +8,7 @@ public class Datos {
 
     public static ArrayList<Ransomware> cargarRansomwares() {
         ransomwares = new ArrayList<>();
-        Ransomware r1 = new RansomwareJAES128("JAES-128", "...");
+        Ransomware r1 = new RansomwareJAES128("JAES-128", "Ransomware de cifrado simétrico AES - 128 bits para análisis académico. Parámetros: clave=1234567812345678");
         ransomwares.add(r1);
         return ransomwares;
     }

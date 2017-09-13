@@ -72,6 +72,7 @@ public class MainFrame extends javax.swing.JFrame {
     public void setRansomwares(ArrayList<Ransomware> ransomwares) {
         RansomwareModel ransomwareModel = new RansomwareModel(ransomwares);
         slcRansomware.setModel(ransomwareModel);
+        slcRansomware.setSelectedIndex(0);
     }
 
     /**
@@ -89,7 +90,7 @@ public class MainFrame extends javax.swing.JFrame {
         slcRansomware = new javax.swing.JComboBox<>();
         btnCifrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txaDescription = new javax.swing.JTextArea();
         txtParametrosEntrada = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         btnDescrifrar = new javax.swing.JButton();
@@ -111,6 +112,12 @@ public class MainFrame extends javax.swing.JFrame {
 
         txtDirectorioSeleccionado.setEnabled(false);
 
+        slcRansomware.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                slcRansomwareActionPerformed(evt);
+            }
+        });
+
         btnCifrar.setText("Cifrar");
         btnCifrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,10 +125,11 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setEnabled(false);
-        jScrollPane1.setViewportView(jTextArea1);
+        txaDescription.setColumns(20);
+        txaDescription.setLineWrap(true);
+        txaDescription.setRows(5);
+        txaDescription.setEnabled(false);
+        jScrollPane1.setViewportView(txaDescription);
 
         jLabel2.setText("Parámetros de entrada");
 
@@ -219,6 +227,7 @@ public class MainFrame extends javax.swing.JFrame {
         if (response == JOptionPane.YES_OPTION) {
             try {
                 Ransomware r = (Ransomware) slcRansomware.getSelectedItem();
+                agregarParametros(r);
                 r.encrypt(this.selectedDirectory);
                 JOptionPane.showMessageDialog(this, "Directorio cifrado", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
@@ -227,16 +236,30 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCifrarActionPerformed
 
+    private void agregarParametros(Ransomware r) {
+        String parametros = txtParametrosEntrada.getText();
+        String[] partes = parametros.split(";");
+        for (String p : partes) {
+            String[] claveValor = p.split("=");
+            if (claveValor.length == 2) {
+                r.addParameter(claveValor[0], claveValor[1]);
+            } else {
+                JOptionPane.showMessageDialog(this, "Error en la definición de los parámetros", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
     private void btnDescrifrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescrifrarActionPerformed
         int response = JOptionPane.showConfirmDialog(this, "¿Está seguro que desea descifrar el directorio " + selectedDirectory + "?", "Atención", JOptionPane.YES_NO_OPTION);
         if (response == JOptionPane.YES_OPTION) {
             try {
                 Ransomware r = (Ransomware) slcRansomware.getSelectedItem();
+                agregarParametros(r);
                 r.decrypt(this.selectedDirectory);
                 JOptionPane.showMessageDialog(this, "Directorio descifrado", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 System.out.println(ex);
-                JOptionPane.showMessageDialog(this, ex.getMessage());
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnDescrifrarActionPerformed
@@ -258,6 +281,12 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void slcRansomwareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_slcRansomwareActionPerformed
+        Ransomware r = (Ransomware) slcRansomware.getSelectedItem();
+        String description = r.getDescription();
+        txaDescription.setText(description);
+    }//GEN-LAST:event_slcRansomwareActionPerformed
 
     /**
      * @param args the command line arguments
@@ -306,9 +335,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JComboBox<String> slcRansomware;
     private javax.swing.JButton slcSeleccionarCarpeta;
+    private javax.swing.JTextArea txaDescription;
     private javax.swing.JTextField txtDirectorioSeleccionado;
     private javax.swing.JTextField txtParametrosEntrada;
     // End of variables declaration//GEN-END:variables

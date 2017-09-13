@@ -1,50 +1,53 @@
 package datos;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import java.util.TreeMap;
 
 public abstract class Ransomware {
 
-    private String nombre;
-    private String descripcion;
+    private String name;
+    private String description;
+    private TreeMap<String, String> parameters;
 
-    public Ransomware(String nombre, String descripcion) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
+    public Ransomware(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.parameters = new TreeMap<>();
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public TreeMap<String, String> getParametros() {
+        return parameters;
+    }
+
+    public void setParameters(TreeMap<String, String> parametros) {
+        this.parameters = parametros;
+    }
+
+    public void addParameter(String key, String value) {
+        this.parameters.put(key, value);
     }
 
     @Override
     public String toString() {
-        return this.nombre;
+        return this.name;
     }
-    
+
     public abstract void encrypt(String victimDir) throws Exception;
+
     public abstract void decrypt(String victimDir) throws Exception;
 }
