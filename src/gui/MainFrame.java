@@ -131,6 +131,8 @@ public class MainFrame extends javax.swing.JFrame {
         txaDescription.setEnabled(false);
         jScrollPane1.setViewportView(txaDescription);
 
+        txtParametrosEntrada.setText("clave=1234567812345678");
+
         jLabel2.setText("Parámetros de entrada");
 
         btnDescrifrar.setText("Descifrar");
